@@ -58,7 +58,7 @@ const Checkout = () => {
 			<Text color={colors.textSecondary} size={0.85}>
 				You have completed your order. Good job! This are your orders:
 			</Text>
-			<StyledOrdersContainer>
+			<StyledOrdersContainer id="ordersContainer">
 				{ordersStore.orders.map(({ id }, index) => (
 					<React.Fragment key={id}>
 						<Text color={colors.textPrimary}>Order #{id}</Text>
@@ -68,6 +68,7 @@ const Checkout = () => {
 			</StyledOrdersContainer>
 			<StyledButtonContainer>
 				<PrimaryButton
+					id="repeatButton"
 					text="Repeat the proccess"
 					onPress={() => ordersStore.resetOrders()}
 				/>

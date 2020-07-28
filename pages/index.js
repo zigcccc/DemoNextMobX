@@ -49,7 +49,8 @@ const Home = () => {
 					Non-Contact Deliveries
 				</BackdropTitle>
 				<Text color={colors.textSecondary} align="center" size={1.2}>
-					You have this many active orders: {ordersStore.ordersCount}
+					You have this many active orders:{' '}
+					<span id="ordersCount">{ordersStore.ordersCount}</span>
 				</Text>
 				{!ordersStore.validNumOfOrders ? (
 					<>
@@ -62,6 +63,7 @@ const Home = () => {
 							continue!
 						</LastParagraph>
 						<FirstButton
+							id="addOrderButton"
 							text="ADD NEW ORDER"
 							onPress={() =>
 								ordersStore.addOrder({ id: Math.round(Math.random() * 1000) })
@@ -74,6 +76,7 @@ const Home = () => {
 					</LastParagraph>
 				)}
 				<PrimaryButton
+					id="goToCheckout"
 					text="GO TO CHECKOUT!"
 					disabled={!ordersStore.validNumOfOrders}
 					onPress={() => router.push('/checkout')}
