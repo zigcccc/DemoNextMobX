@@ -1,7 +1,10 @@
 export default (req, res) => {
 	res.statusCode = 200;
-	res.json({
-		name: req.query?.name || 'John Doe',
-		id: Math.round(Math.random() * 100),
-	});
+	// Demo purpose for loading state
+	setTimeout(() => {
+		res.json({
+			name: req.query?.name || 'John Doe',
+			id: Math.round(Math.random() * 100),
+		});
+	}, 2000);
 };

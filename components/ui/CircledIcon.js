@@ -1,7 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import styled from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
+
+const rotate = keyframes`
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(365deg);
+	}
+`;
+
+const animationCss = css`
+	animation: 3s ${rotate} linear infinite;
+`;
 
 const StyledCircledIcon = styled.div`
 	border-radius: 50%;
@@ -13,14 +26,16 @@ const StyledCircledIcon = styled.div`
 	justify-content: center;
 	align-items: center;
 	color: ${({ theme }) => theme.colors.textPrimary};
+	${({ rotating }) => rotating && animationCss};
 `;
 
-const CircledIcon = ({ icon }) => {
-	return <StyledCircledIcon>{icon}</StyledCircledIcon>;
+const CircledIcon = ({ icon, rotating }) => {
+	return <StyledCircledIcon {...{ rotating }}>{icon}</StyledCircledIcon>;
 };
 
 CircledIcon.propTypes = {
 	icon: PropTypes.node,
+	rotating: PropTypes.bool,
 };
 
 export default CircledIcon;

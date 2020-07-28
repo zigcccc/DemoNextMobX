@@ -44,7 +44,7 @@ const Checkout = () => {
 		if (!ordersStore.validNumOfOrders) {
 			router.push('/');
 		}
-	}, [ordersStore.ordersCount]);
+	}, [ordersStore.validNumOfOrders]);
 
 	return (
 		<Container>

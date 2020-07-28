@@ -10,7 +10,7 @@ import styled, { useTheme } from 'styled-components';
 import axios from 'axios';
 
 import { Head, Container } from '../components/layout';
-import { IconBox } from '../components/icons';
+import { IconBox, IconLoading } from '../components/icons';
 import { Logo } from '../components/graphics';
 import { Backdrop, CircledIcon, PrimaryButton } from '../components/ui';
 import { Text } from '../components/typography';
@@ -33,54 +33,70 @@ const Home = () => {
 	const router = useRouter();
 	const { colors } = useTheme();
 	const { ordersStore } = useStores();
+
+	React.useEffect(() => {
+		if (!ordersStore.customerName && ordersStore.state === 'inactive') {
+			ordersStore.getCustomerName();
+		}
+	}, [ordersStore.customerName]);
+
 	return (
 		<Container background={colors.selectedViolet}>
 			<Head title="Non-Contact Deliveries" />
 
 			<Logo />
 			<Backdrop>
-				<CircledIcon icon={<IconBox />} />
-				<BackdropTitle
-					tag="h1"
-					size={2}
-					align="center"
-					color={colors.textPrimary}
-				>
-					Non-Contact Deliveries
-				</BackdropTitle>
-				<Text color={colors.textSecondary} align="center" size={1.2}>
-					You have this many active orders:{' '}
-					<span id="ordersCount">{ordersStore.ordersCount}</span>
-				</Text>
-				{!ordersStore.validNumOfOrders ? (
+				<CircledIcon
+					rotating={ordersStore.state === 'loading'}
+					icon={ordersStore.state === 'loading' ? <IconLoading /> : <IconBox />}
+				/>
+				{ordersStore.state === 'done' && (
 					<>
-						<LastParagraph
-							color={colors.textSecondary}
+						<BackdropTitle
+							tag="h1"
+							size={2}
 							align="center"
-							size={0.85}
+							color={colors.textPrimary}
 						>
-							You only need {ordersStore.neededOrdersLeft} more orders to
-							continue!
-						</LastParagraph>
-						<FirstButton
-							id="addOrderButton"
-							text="ADD NEW ORDER"
-							onPress={() =>
-								ordersStore.addOrder({ id: Math.round(Math.random() * 1000) })
-							}
+							Non-Contact Deliveries
+						</BackdropTitle>
+						<Text color={colors.textSecondary} align="center" size={1.2}>
+							{ordersStore.customerName}, you have this many active orders:{' '}
+							<span id="ordersCount">{ordersStore.ordersCount}</span>
+						</Text>
+						{!ordersStore.validNumOfOrders ? (
+							<>
+								<LastParagraph
+									color={colors.textSecondary}
+									align="center"
+									size={0.85}
+								>
+									You only need {ordersStore.neededOrdersLeft} more orders to
+									continue!
+								</LastParagraph>
+								<FirstButton
+									id="addOrderButton"
+									text="ADD NEW ORDER"
+									onPress={() =>
+										ordersStore.addOrder({
+											id: Math.round(Math.random() * 1000),
+										})
+									}
+								/>
+							</>
+						) : (
+							<LastParagraph color={colors.textSecondary} align="center">
+								{"Allright sparky, let's go to checkout."}
+							</LastParagraph>
+						)}
+						<PrimaryButton
+							id="goToCheckout"
+							text="GO TO CHECKOUT!"
+							disabled={!ordersStore.validNumOfOrders}
+							onPress={() => router.push('/checkout')}
 						/>
 					</>
-				) : (
-					<LastParagraph color={colors.textSecondary} align="center">
-						{"Allright sparky, let's go to checkout."}
-					</LastParagraph>
 				)}
-				<PrimaryButton
-					id="goToCheckout"
-					text="GO TO CHECKOUT!"
-					disabled={!ordersStore.validNumOfOrders}
-					onPress={() => router.push('/checkout')}
-				/>
 			</Backdrop>
 		</Container>
 	);
