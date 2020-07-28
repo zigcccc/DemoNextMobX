@@ -5,7 +5,8 @@ import styled from 'styled-components';
 
 const StyledCircledIcon = styled.div`
 	border-radius: 50%;
-	padding: ${({ theme }) => theme.spacings.ml};
+	width: 104px;
+	height: 104px;
 	background-color: ${({ theme }) => theme.colors.white};
 	font-size: 40px;
 	display: flex;

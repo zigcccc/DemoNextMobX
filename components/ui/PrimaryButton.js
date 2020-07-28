@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import { transparentize } from 'polished';
 
 const StyledButton = styled.button`
-	background-color: ${({ theme }) => theme.colors.primaryButton};
+	background-color: ${({ theme, disabled }) =>
+		transparentize(disabled ? 0.7 : 0, theme.colors.primaryButton)};
 	color: ${({ theme }) => theme.colors.white};
 	font-size: 0.88rem;
 	font-weight: 600;
@@ -23,13 +24,22 @@ const StyledButton = styled.button`
 			transparentize(0.5, theme.colors.primaryButton)}
 `;
 
-const PrimaryButton = ({ text, onPress }) => {
-	return <StyledButton onClick={onPress}>{text}</StyledButton>;
+const PrimaryButton = ({ text, onPress, disabled, ...rest }) => {
+	return (
+		<StyledButton
+			onClick={disabled ? null : onPress}
+			disabled={disabled}
+			{...rest}
+		>
+			{text}
+		</StyledButton>
+	);
 };
 
 PrimaryButton.propTypes = {
 	text: PropTypes.string,
 	onPress: PropTypes.func,
+	disabled: PropTypes.bool,
 };
 
 export default PrimaryButton;

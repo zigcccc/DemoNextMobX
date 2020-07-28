@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import 'mobx-react/batchingForReactDom';
 import React from 'react';
 import NextApp from 'next/app';
 
