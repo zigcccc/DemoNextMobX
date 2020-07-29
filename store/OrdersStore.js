@@ -1,38 +1,36 @@
-import { observable, computed, action, runInAction } from 'mobx';
+import { observable, computed, action, runInAction, decorate } from 'mobx';
 import axios from 'axios';
 
 class OrdersStore {
-	@observable orders = [];
-	@observable customerName = null;
-	@observable state = 'inactive';
+	orders = [];
+	customerName = null;
+	state = 'inactive';
 	minOrders = 10;
 
-	@computed
 	get ordersCount() {
 		return this.orders.length;
 	}
 
-	@computed
 	get neededOrdersLeft() {
 		return this.minOrders - this.ordersCount;
 	}
 
-	@computed
 	get validNumOfOrders() {
 		return this.neededOrdersLeft === 0;
 	}
 
-	@action
 	addOrder = (order) => {
 		this.orders = [...this.orders, order];
 	};
 
-	@action
+	deleteOrder = (id) => {
+		this.orders = this.orders.filter((order) => order.id !== id);
+	};
+
 	resetOrders = () => {
 		this.orders = [];
 	};
 
-	@action
 	getCustomerName = async () => {
 		this.state = 'loading';
 		try {
@@ -52,5 +50,18 @@ class OrdersStore {
 		}
 	};
 }
+
+decorate(OrdersStore, {
+	orders: observable,
+	customerName: observable,
+	state: observable,
+	ordersCount: computed,
+	neededOrdersLeft: computed,
+	validNumOfOrders: computed,
+	addOrder: action,
+	deleteOrder: action,
+	resetOrders: action,
+	getCustomerName: action,
+});
 
 export default OrdersStore;

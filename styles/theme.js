@@ -9,6 +9,7 @@ const theme = {
 		primaryButton: '#0BCE83',
 		green: '#CBF265',
 		white: '#FFFFFF',
+		danger: '#F24E1E',
 	},
 	spacings: {
 		xs: '6px',

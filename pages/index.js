@@ -7,12 +7,17 @@ import { observer } from 'mobx-react';
 
 import styled, { useTheme } from 'styled-components';
 
-import axios from 'axios';
-
 import { Head, Container } from '../components/layout';
 import { IconBox, IconLoading } from '../components/icons';
 import { Logo } from '../components/graphics';
-import { Backdrop, CircledIcon, PrimaryButton } from '../components/ui';
+import {
+	Backdrop,
+	CircledIcon,
+	PrimaryButton,
+	Modal,
+	TextButton,
+	OrderItem,
+} from '../components/ui';
 import { Text } from '../components/typography';
 
 import { useStores } from '../hooks';
@@ -30,6 +35,8 @@ const FirstButton = styled(PrimaryButton)`
 `;
 
 const Home = () => {
+	const [modalActive, setModalActive] = React.useState(false);
+
 	const router = useRouter();
 	const { colors } = useTheme();
 	const { ordersStore } = useStores();
@@ -40,10 +47,15 @@ const Home = () => {
 		}
 	}, [ordersStore.customerName]);
 
+	React.useEffect(() => {
+		if (ordersStore.ordersCount === 0 && modalActive) {
+			setModalActive(false);
+		}
+	}, [ordersStore.ordersCount, modalActive, setModalActive]);
+
 	return (
 		<Container background={colors.selectedViolet}>
 			<Head title="Non-Contact Deliveries" />
-
 			<Logo />
 			<Backdrop>
 				<CircledIcon
@@ -64,6 +76,12 @@ const Home = () => {
 							{ordersStore.customerName}, you have this many active orders:{' '}
 							<span id="ordersCount">{ordersStore.ordersCount}</span>
 						</Text>
+						{ordersStore.ordersCount > 0 && (
+							<TextButton
+								text="Show orders"
+								onPress={() => setModalActive(true)}
+							/>
+						)}
 						{!ordersStore.validNumOfOrders ? (
 							<>
 								<LastParagraph
@@ -98,6 +116,17 @@ const Home = () => {
 					</>
 				)}
 			</Backdrop>
+			<Modal visible={modalActive} onClose={() => setModalActive(false)}>
+				<Text tag="h2" size={1.5}>
+					Your orders
+				</Text>
+				{ordersStore.orders.map(({ id }, index) => (
+					<React.Fragment key={id}>
+						<OrderItem id={id} onDelete={() => ordersStore.deleteOrder(id)} />
+						{index + 1 !== ordersStore.ordersCount && <hr />}
+					</React.Fragment>
+				))}
+			</Modal>
 		</Container>
 	);
 };
@@ -107,14 +136,3 @@ Home.propTypes = {
 };
 
 export default observer(Home);
-
-export async function getStaticProps() {
-	const { data } = await axios.get('http://localhost:3000/api/hello?name=Ziga');
-	const { name } = data;
-
-	return {
-		props: {
-			name,
-		},
-	};
-}

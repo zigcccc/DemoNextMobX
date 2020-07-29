@@ -2,16 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import styled, { css } from 'styled-components';
-import { transparentize, darken } from 'polished';
+import { transparentize } from 'polished';
 
 const hoverCss = css`
-	background-color: ${({ theme }) => darken(0.05, theme.colors.primaryButton)};
+	background-color: ${({ theme }) =>
+		transparentize(0.95, theme.colors.textPrimary)};
 `;
 
 const StyledButton = styled.button`
 	background-color: ${({ theme, disabled }) =>
-		transparentize(disabled ? 0.7 : 0, theme.colors.primaryButton)};
-	color: ${({ theme }) => theme.colors.white};
+		transparentize(disabled ? 0.85 : 1, theme.colors.textPrimary)};
+	color: ${({ theme }) => theme.colors.textSecondary};
 	font-size: 0.88rem;
 	font-weight: 600;
 	text-transform: uppercase;
@@ -30,11 +31,11 @@ const StyledButton = styled.button`
 
 	&:active {
 		background-color: ${({ theme }) =>
-			transparentize(0.5, theme.colors.primaryButton)};
+			transparentize(0.9, theme.colors.textPrimary)};
 	}
 `;
 
-const PrimaryButton = ({ text, onPress, disabled, ...rest }) => {
+const TextButton = ({ text, onPress, disabled, ...rest }) => {
 	return (
 		<StyledButton
 			onClick={disabled ? null : onPress}
@@ -46,10 +47,10 @@ const PrimaryButton = ({ text, onPress, disabled, ...rest }) => {
 	);
 };
 
-PrimaryButton.propTypes = {
+TextButton.propTypes = {
 	text: PropTypes.string,
 	onPress: PropTypes.func,
 	disabled: PropTypes.bool,
 };
 
-export default PrimaryButton;
+export default TextButton;
